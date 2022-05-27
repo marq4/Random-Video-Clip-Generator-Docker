@@ -7,7 +7,6 @@ import sys
 import xml.etree.ElementTree as ET
 from subprocess import Popen
 
-
 XML_PLAYLIST_FILE = 'clips.xspf'
 SUBFOLDER = 'share'
 NUMBER_OF_CLIPS = 5
