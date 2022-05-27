@@ -1,0 +1,15 @@
+*.pyc
+*.pyo
+*.swp
+*~
+.pytest_cache
+__pycache__
+.mypy_cache
+.mypycache
+.vscode
+*.mp4
+*.webm
+*.mkv
+clips.xspf
+spellright.dict
+List.md
