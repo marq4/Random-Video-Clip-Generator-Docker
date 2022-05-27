@@ -29,3 +29,6 @@ You will need:
 
 ### Sanitize video file names: ###
 [See: Clean the video file names](https://github.com/marq4/Random-Video-Clip-Generator "See: Clean the video file names")
+
+### List of suggested videos: ###
+[List](https://github.com/marq4/Random-Video-Clip-Generator/blob/main/List.md "List")
