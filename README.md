@@ -17,7 +17,6 @@ You will need:
 6. Get image and run container (pulls and starts. These ARE the files from Windows, not copies):  
     `winpty docker run -it --name randomvideoclipgenerator_cont --volume C:\\Random-Video-Clip-Generator-Docker\\share:/root/RandomVideos/share marq4/random-video-clip-generator:latest`
 7. Inside the container do (and follow those instructions):  
-    `ls share  # Verify videos are there.`  
     `cat Instructions.txt`
 8. Move the playlist file out of the share directory (in Windows).
 9. Double-click the playlist file to open it with VLC.
