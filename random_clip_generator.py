@@ -136,5 +136,4 @@ def main():
     print(f"VLC playlist generated: {XML_PLAYLIST_FILE}")
 
 if __name__ == "__main__":
-    print("\n\n\nDO NOT TRY TO TEST ON WIN!!!!\n\n\n")#TMP
     main()
