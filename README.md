@@ -26,3 +26,6 @@ You will need:
     `docker start randomvideoclipgenerator_cont`  
     `winpty docker exec -it randomvideoclipgenerator_cont bash`
 12. To make new videos available to the container simply move them into share directory in Windows. No need to restart the container.
+
+### Sanitize video file names: ###
+[See: Clean the video file names](https://github.com/marq4/Random-Video-Clip-Generator "See: Clean the video file names")
