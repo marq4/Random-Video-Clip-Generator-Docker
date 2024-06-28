@@ -3,13 +3,11 @@
 import os
 import re
 
-# ignore = [os.path.basename(__file__), 'random_clip_generator.py', 'exevlc.bat']
-
-for original in os.listdir("."):
+for original in os.listdir("share"):
+    prefix = '/root/RandomVideos/share'
     if original == os.path.basename(__file__) \
-        or original == 'random_clip_generator.py' \
-        or original == 'exevlc.bat':
+        or original == 'random_clip_generator.py':
         continue
     sanitized = re.sub(r"[^a-zA-Z0-9\.]", '', original)
     if sanitized != original:
-        os.rename(original, sanitized)
+        os.rename(f"{prefix}/{original}", f"{prefix}/{sanitized}")

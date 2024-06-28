@@ -73,7 +73,7 @@ def add_clip_to_tracklist(track_list: ET.Element, \
         :param: end: Stop clip at. """
     assert track_list is not None and video and start >= 0
     track = ET.SubElement(track_list, 'track')
-    ET.SubElement(track, 'location').text = f"file:///{video}"
+    ET.SubElement(track, 'location').text = f"C:\\share\\{video}"  #f"file:///{video}"
     extension = ET.SubElement(track, 'extension', \
         application='http://www.videolan.org/vlc/playlist/0')
     ET.SubElement(extension, 'vlc:option').text = f"start-time={start}"
@@ -106,12 +106,14 @@ def generate_random_video_clips_playlist(video_list: list) -> ET.Element:
 
     for iteration in range(NUMBER_OF_CLIPS):
         video_file = select_video_at_random(video_list)
+        print(f"{video_file = }")#TMP
         duration = get_video_duration(iteration, video_file)
 
         begin_at = choose_starting_point(duration)
         clip_length = random.randint(INTERVAL_MIN, INTERVAL_MAX)
         play_to = begin_at + clip_length
 
+        video_file = video_file.replace('share/', '')
         add_clip_to_tracklist(tracks, video_file, begin_at, play_to)
 
     return playlist
@@ -122,6 +124,12 @@ def verify_intervals_valid() -> None:
     assert 15 >= INTERVAL_MIN >= 1
     assert 25 >= INTERVAL_MAX >= 1
 
+def remove_playlist_if_found(files: list) -> list:
+    """ Remove playlist file if found under videos subdir. """
+    if 'clips.xspf' in files:
+        files.remove('clips.xspf')
+    return files
+    
 
 def main():
     """
@@ -130,6 +138,8 @@ def main():
     """
     verify_intervals_valid()
     files = list_files_subfolder()
+    files = remove_playlist_if_found(files)
+    print(f"{files = }")#TMP
     top_element = generate_random_video_clips_playlist(files)
     create_xml_file(top_element)
     print(f"VLC playlist generated: {XML_PLAYLIST_FILE}")
