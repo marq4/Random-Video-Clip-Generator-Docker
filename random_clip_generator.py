@@ -106,7 +106,6 @@ def generate_random_video_clips_playlist(video_list: list) -> ET.Element:
 
     for iteration in range(NUMBER_OF_CLIPS):
         video_file = select_video_at_random(video_list)
-        print(f"{video_file = }")#TMP
         duration = get_video_duration(iteration, video_file)
 
         begin_at = choose_starting_point(duration)
@@ -139,7 +138,6 @@ def main():
     verify_intervals_valid()
     files = list_files_subfolder()
     files = remove_playlist_if_found(files)
-    print(f"{files = }")#TMP
     top_element = generate_random_video_clips_playlist(files)
     create_xml_file(top_element)
     print(f"VLC playlist generated: {XML_PLAYLIST_FILE}")
