@@ -129,7 +129,7 @@ def remove_playlist_if_found(files: list) -> list:
     if 'clips.xspf' in files:
         files.remove('clips.xspf')
     return files
-    
+
 
 def main():
     """
