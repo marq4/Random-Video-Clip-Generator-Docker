@@ -12,12 +12,12 @@ You will need:
 2. Install VLC (video player): https://www.videolan.org/vlc/download-windows.wa.html
 3. Install git bash: https://git-scm.com/download/win
 4. Create a directory under your C drive called share and download a couple of music videos there.
-5. Start docker desktop and verify it's running:
+5. Start docker desktop and verify it's running: 
     `docker info`
 6. Get image and run container (pulls and starts. The videos you see inside the container ARE the files from Windows, not copies):  
     `winpty docker run -it --name randomvideoclipgenerator_cont --volume C:\\share:/root/RandomVideos/share marq4/random_videoclip_generator_docker:latest`
 7. Inside the container do (and follow those instructions):  
-    `cat Instructions.txt`
+    `cat instructions.txt`
 8. Double-click the playlist file to open it with VLC.
 9. To finish with the container simply:  
     `exit`
