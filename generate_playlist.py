@@ -18,19 +18,19 @@ DEFAULT_INTERVAL_MAX = 4
 
 def verify_intervals_valid(min_interval: int, max_interval: int) -> None:
     """
-	* Video clips must be between 1 to 25 seconds long.
-	* The highest min interval is 15. 
-	* The highest max interval is 25. 
-	"""
+    * Video clips must be between 1 to 25 seconds long.
+    * The highest min interval is 15. 
+    * The highest max interval is 25. 
+    """
     assert 15 >= min_interval >= 1
     assert 25 >= max_interval >= 1
 #
 
 def generate_random_video_clips_playlist(
-				video_list: list,
-				number_of_clips: int, 
-				min_interval: int,
-				max_interval: int) -> ET.Element:
+        video_list: list,
+        number_of_clips: int,
+        min_interval: int,
+        max_interval: int) -> ET.Element:
     """
     * Create playlist as an xml element tree.
     * Create tracklist as subelement of playlist. This contains the clips.
@@ -40,7 +40,7 @@ def generate_random_video_clips_playlist(
         + Add clip to playlist.
     """
     assert video_list and number_of_clips > 0
-	#TODO: what is the MAX # of clips before VLC crashes?
+    #TODO: what is the MAX # of clips before VLC crashes?
 
     playlist = ET.Element("playlist", version="1", xmlns="http://xspf.org/ns/0/")
     tracks = ET.SubElement(playlist, "trackList")
@@ -49,19 +49,19 @@ def generate_random_video_clips_playlist(
         "Invalid number of clips: {number_of_clips} "
 
     for iteration in range(number_of_clips):
-		video_file = select_video_at_random(video_list)
-		duration = get_video_duration(iteration, video_file)
+        video_file = select_video_at_random(video_list)
+        duration = get_video_duration(iteration, video_file)
         begin_at = choose_starting_point(duration, max_interval)
         clip_length = random.randint(min_interval, max_interval)
         play_to = begin_at + clip_length
-		video_file = video_file.replace('{SUBFOLDER}/', '')
+        video_file = video_file.replace('{SUBFOLDER}/', '')
         add_clip_to_tracklist(tracks, video_file, begin_at, play_to)
 
     return playlist
 #
 
 def add_clip_to_tracklist(track_list: ET.Element, \
-    video: str, start: int, end: int) -> None:
+        video: str, start: int, end: int) -> None:
     """ Add clip (track) to playlist.trackList sub element tree and mute.
         :param: track_list: Contains the clips.
         :param: video: The name of the video file to be cut.
@@ -93,8 +93,8 @@ def choose_starting_point(video_length: int, max_interval: int) -> int:
 def select_video_at_random(list_of_files: list) -> str:
     """ Choose a video. :return: Video filename with subpath only. """
     assert list_of_files and SUBFOLDER
-	selected = random.randint(0, len(list_of_files) - 1)
-	return f"{SUBFOLDER}/{list_of_files[selected]}"
+    selected = random.randint(0, len(list_of_files) - 1)
+    return f"{SUBFOLDER}/{list_of_files[selected]}"
 #
 
 def prepend_line(filename: str, line: str) -> None:
@@ -111,7 +111,9 @@ def list_files_subfolder() -> list:
     """ Create a list of all files 'share' subfolder. """
     subfolder_contents = os.listdir(SUBFOLDER)
     if subfolder_contents is None or len(subfolder_contents) < 1:
-        print(f"There are no files under 'share' subfolder. Please download some music videos here (on your host OS, e.g. Windows).")
+        print('There are no files under "share" subfolder.')
+        print('Please download some music videos here ' + \
+                '(on your host OS, e.g. Windows).')
         sys.exit()
     return subfolder_contents
 #
@@ -158,7 +160,7 @@ def remove_playlist_if_found(files: list) -> list:
 
 def main():
     """
-	* Get values for number of clips to generate, intervals, or choose defaults. 
+    * Get values for number of clips to generate, intervals, or choose defaults. 
     * Get list of videos from 'share' subfolder.
     * Generate an xml playlist with random clips from those videos.
     * Run VLC with that playlist.
@@ -166,13 +168,13 @@ def main():
     number_of_clips = sys.argv[1] or DEFAULT_NUM_CLIPS
     interval_min = sys.argv[2] or DEFAULT_INTERVAL_MIN
     interval_max = sys.argv[3] or DEFAULT_INTERVAL_MAX
-	verify_intervals_valid(interval_min, interval_max)
-	files = list_files_subfolder()
-	files = remove_playlist_if_found(files)
-	top_element = generate_random_video_clips_playlist(files)
-	create_xml_file(top_element)
-	print(f"VLC playlist generated: {XML_PLAYLIST_FILE}")
-	subprocess.run(['vlc', f"{XML_PLAYLIST_FILE}"])
+    verify_intervals_valid(interval_min, interval_max)
+    files = list_files_subfolder()
+    files = remove_playlist_if_found(files)
+    top_element = generate_random_video_clips_playlist(files)
+    create_xml_file(top_element)
+    print(f"VLC playlist generated: {XML_PLAYLIST_FILE}")
+    subprocess.run(['vlc', f"{XML_PLAYLIST_FILE}"])
 #
 
 

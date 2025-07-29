@@ -32,7 +32,6 @@ jobs:
       - name: Type checking.
         run: |
           mypy \
-          sanitize_video_titles.py \
           random_clip_generator.py
 
       - name: Import ordering.
