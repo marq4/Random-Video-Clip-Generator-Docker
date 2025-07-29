@@ -5,6 +5,7 @@
 import os
 import random
 import subprocess
+import sys
 import xml.etree.ElementTree as ET
 from subprocess import Popen
 
@@ -40,7 +41,6 @@ def generate_random_video_clips_playlist(
         + Add clip to playlist.
     """
     assert video_list and number_of_clips > 0
-    #TODO: what is the MAX # of clips before VLC crashes?
 
     playlist = ET.Element("playlist", version="1", xmlns="http://xspf.org/ns/0/")
     tracks = ET.SubElement(playlist, "trackList")
@@ -50,7 +50,7 @@ def generate_random_video_clips_playlist(
 
     for iteration in range(number_of_clips):
         video_file = select_video_at_random(video_list)
-        duration = get_video_duration(iteration, video_file)
+        duration = get_video_duration(iteration, video_file, min_interval)
         begin_at = choose_starting_point(duration, max_interval)
         clip_length = random.randint(min_interval, max_interval)
         play_to = begin_at + clip_length
@@ -118,13 +118,6 @@ def list_files_subfolder() -> list:
     return subfolder_contents
 #
 
-def execute_vlc() -> None:
-    """ Call VLC only once and pass it the xspf playlist. """
-    executable = os.path.join(CURRENT_DIRECTORY, 'exevlc.bat')
-    with Popen([executable, f"{CURRENT_DIRECTORY}/{XML_PLAYLIST_FILE}"]):
-        pass
-#
-
 def get_video_duration(num_to_log: int, video: str, min_interval: int) -> int:
     """ Extract video duration with ffprobe and subprocess.Popen.
         :return: Video duration in seconds. """
@@ -173,4 +166,3 @@ def main():
 if __name__ == '__main__':
     main()
 #
-
