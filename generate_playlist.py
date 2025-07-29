@@ -125,14 +125,6 @@ def execute_vlc() -> None:
         pass
 #
 
-def generate_playlist(pairs: list, num_clips: int) -> str:
-    """ Returns XSPF as string. """
-    verify_intervals_valid()
-    top_element = generate_random_video_clips_playlist(%%%pairs%%%, num_clips)
-    create_xml_file(top_element)
-    return XML_PLAYLIST_FILE
-#
-
 def get_video_duration(num_to_log: int, video: str, min_interval: int) -> int:
     """ Extract video duration with ffprobe and subprocess.Popen.
         :return: Video duration in seconds. """
