@@ -2,7 +2,7 @@
 Plays random sections of videos for background visual noise. Great for parties. You only need to install Docker! 
 
 You will need:
-* Docker (available for Windows, Mac, & Linux).
+* Docker (available for Windows, Linux).
 * The videos have to be locally available.
 
 ### How to use: ###
