@@ -156,10 +156,11 @@ def main():
     verify_intervals_valid(interval_min, interval_max)
     files = list_files_subfolder()
     files = remove_playlist_if_found(files)
-    top_element = generate_random_video_clips_playlist(files)
+    top_element = generate_random_video_clips_playlist(files, \
+            number_of_clips, interval_min, interval_max)
     create_xml_file(top_element)
     print(f"VLC playlist generated: {XML_PLAYLIST_FILE}")
-    subprocess.run(['vlc', f"{XML_PLAYLIST_FILE}"])
+    subprocess.run(['vlc', f"{XML_PLAYLIST_FILE}"], check=False)
 #
 
 
