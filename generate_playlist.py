@@ -11,9 +11,9 @@ from subprocess import Popen
 
 XML_PLAYLIST_FILE = 'clips.xspf'
 SUBFOLDER = 'share'
-DEFAULT_NUM_CLIPS = 10_000
+DEFAULT_NUM_CLIPS = 3
 DEFAULT_INTERVAL_MIN = 2
-DEFAULT_INTERVAL_MAX = 4
+DEFAULT_INTERVAL_MAX = 2
 
 
 def verify_intervals_valid(min_interval: int, max_interval: int) -> None:
@@ -121,15 +121,12 @@ def get_video_duration(num_to_log: int, video: str, min_interval: int) -> int:
     """ Extract video duration with ffprobe and subprocess.Popen.
         :return: Video duration in seconds. """
     assert video
-    ffprobe_str = "ffprobe -v error -select_streams v:0 \
-        -show_entries stream=duration -of default=noprint_wrappers=1:nokey=1"
-    command = f"{ffprobe_str} {video} "
-    with Popen(command, stdout=subprocess.PIPE, shell=True) as process:
-        (out, err) = process.communicate()
-    if err:
-        print(f"Process error: [{str(err)}]. Iteration: {num_to_log}. ")
-    result = ( ( ( ( str(out) ).split('.', maxsplit=1) )[0] ).split("b'") )[1]
-    seconds = int(result)
+    result = subprocess.run(['ffprobe', '-v', 'error', '-select_streams', \
+            'v:0', '-show_entries', 'stream=duration', '-of', \
+            'default=noprint_wrappers=1:nokey=1', video], \
+            capture_output=True, check=False)
+    duration = float(result.stdout)
+    seconds = int(duration)
     assert min_interval < seconds > 0, f"Video too short: {video} "
     return seconds
 #
@@ -149,9 +146,16 @@ def main():
     * Generate an xml playlist with random clips from those videos.
     * Run VLC with that playlist.
     """
-    number_of_clips = sys.argv[1] or DEFAULT_NUM_CLIPS
-    interval_min = sys.argv[2] or DEFAULT_INTERVAL_MIN
-    interval_max = sys.argv[3] or DEFAULT_INTERVAL_MAX
+    number_of_clips = DEFAULT_NUM_CLIPS
+    interval_min = DEFAULT_INTERVAL_MIN
+    interval_max = DEFAULT_INTERVAL_MAX
+    num_args_passed = len(sys.argv) -1
+    if num_args_passed > 0:
+        number_of_clips = sys.argv[1]
+        if num_args_passed == 3:
+            interval_min = sys.argv[2]
+            interval_max = sys.argv[3]
+
     verify_intervals_valid(interval_min, interval_max)
     files = list_files_subfolder()
     files = remove_playlist_if_found(files)
@@ -159,7 +163,6 @@ def main():
             number_of_clips, interval_min, interval_max)
     create_xml_file(top_element)
     print(f"VLC playlist generated: {XML_PLAYLIST_FILE}")
-    subprocess.run(['vlc', f"{XML_PLAYLIST_FILE}"], check=False)
 #
 
 
