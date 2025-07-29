@@ -30,9 +30,8 @@ jobs:
           pylint -v $(git ls-files '*.py')
 
       - name: Type checking.
-        run: |
-          mypy \
-          random_clip_generator.py
+        run:
+          mypy generate_playlist.py
 
       - name: Import ordering.
         run: |
