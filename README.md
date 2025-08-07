@@ -1,5 +1,5 @@
 # Random Video Clip Generator - Docker
-Plays random sections of videos for background visual noise. Great for parties. You only need to install Docker! 
+Play random sections of videos for background visual noise. Great for parties. You only need to install Docker! 
 
 You will need:
 * Docker Desktop (available for Windows and Linux).
