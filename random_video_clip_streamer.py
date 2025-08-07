@@ -14,7 +14,7 @@ CLIP_LENGTH = 4
 def select_video_at_random(list_of_files: list) -> str:
     """ Choose a video. :return: Video filename with subpath only. """
     assert list_of_files and SUBFOLDER
-    selected = random.choise(list_of_files)
+    selected = random.choice(list_of_files)
     return selected
 #
 
@@ -33,10 +33,11 @@ def get_video_duration(video: str) -> int:
     """ Extract video duration with ffprobe and subprocess.Popen.
         :return: Video duration in seconds. """
     assert video
+    video = f"{SUBFOLDER}/{video}"
     result = subprocess.run(['ffprobe', '-v', 'error', '-select_streams', \
             'v:0', '-show_entries', 'stream=duration', '-of', \
-            'default=noprint_wrappers=1:nokey=1', video], \
-            capture_output=True, check=False)
+            'default=noprint_wrappers=1:nokey=1', video], capture_output=True, 
+            check=False)
     duration = float(result.stdout)
     seconds = int(duration)
     # assert min_interval < seconds > 0, f"Video too short: {video} "
@@ -63,7 +64,8 @@ def main() -> None:
         duration = get_video_duration(video)
         begin_at = choose_starting_point(duration)
         output_path = "/var/www/html/playlist.m3u8"
-        subprocess.run(["ffmpeg", "-re", "-ss", str(start), "-i", video,
+        video = f"{SUBFOLDER}/{video}"
+        subprocess.run(["ffmpeg", "-re", "-ss", str(begin_at), "-i", video,
             "-t", str(CLIP_LENGTH), "-c:v", "libx264", "-c:a", "aac", 
             "-f", "hls", "-hls_time", "4", "-hls_list_size", "5",
             "-hls_flags", "delete_segments", output_path])
