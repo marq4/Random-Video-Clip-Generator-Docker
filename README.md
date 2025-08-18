@@ -20,7 +20,6 @@ You will need:
 6. Open your web browser (like FireFox or Brave) and go to http://localhost:8080
 7. Reload the web browser as needed and wait for a couple of seconds.
 8. IF you don't see your video clips playing, please contact me.
-9. To make new videos available to the container simply move them into share directory in your host OS (e.g. Windows), no need to restart the container. 
 
 ### List of suggested videos: ###
 [List](https://github.com/marq4/Random-Video-Clip-Generator/blob/main/List.md "List")
