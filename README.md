@@ -11,10 +11,12 @@ You will need:
 3. Start Docker Desktop. 
 4. Open the Docker Desktop GUI.
    1. Go to Docker Hub section on the right vertical menu.
-   2. Search for and select "marq4/random_video_clip_streamer".
-   3. Click "pull" button.
-   4. Go to Images section. Select the image you just downloaded. Click the play button. Expand Optional Settings. Give your container a name, e.g. RandomVideoClipStreamerContainer (optional). 
-   5. To specify a clip duration pass this enviornment variable: USER_CLIP_LENGTH. The valid range is between 3 and 25 seconds but the default and recommeneded minimun value is 6.
+   2. Search for and select "marq4/random_video_clip_streamer". 
+   3. Make sure the latest tag is selected. Click "pull" button.
+   4. Go to Images section. Select the image you just downloaded. Click the play button. Expand Optional Settings. Give your container a name, e.g. RandomVideoClipStreamerContainer (optional).
+   5. For the volumes: Host path: browse to C:\share. Container path: /root/RandomVideos/share/
+   7. To optionally specify a clip duration set the Enviornment Variable name to: USER_CLIP_LENGTH. The valid range is between 3 and 25 seconds but the default and recommeneded minimun value is 6.
+   8. Click "Run" button. 
 6. Open your web browser (like FireFox or Brave) and go to http://localhost:8080
 7. Reload the web browser as needed and wait for a couple of seconds.
 8. IF you don't see your video clips playing, please contact me.
