@@ -31,7 +31,7 @@ jobs:
 
       - name: Type checking.
         run:
-          mypy generate_playlist.py
+          mypy random_video_clip_streamer.py
 
       - name: Import ordering.
         run: |
