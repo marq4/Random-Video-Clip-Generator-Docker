@@ -1,4 +1,4 @@
-# Random Video Clip Generator - Docker
+# Random Video Clip Streamer - Docker
 Play random sections of videos for background visual noise. Great for parties. You only need to install Docker! 
 
 You will need:
