@@ -1,5 +1,7 @@
 FROM ubuntu:latest
 
+EXPOSE 8080
+
 RUN mkdir -p /root/RandomVideos/share/
 
 RUN apt update

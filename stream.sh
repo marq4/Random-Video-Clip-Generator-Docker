@@ -1,6 +1,6 @@
 #! /bin/bash -
 
-${USER_CLIP_LENGTH:-4}
+USER_CLIP_LENGTH=${USER_CLIP_LENGTH:-4}
 
 cd /var/www/html/ && python3.10 cors_server.py &
 sleep 1
