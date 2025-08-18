@@ -10,32 +10,31 @@ PATH='/root/RandomVideos'
 SUBFOLDER = 'share'
 CONCAT_FILE = 'concat.txt'
 NUM_CLIPS_AHEAD = 10
-CLIP_LENGTH = 6
 PADDING = 5
 MIN_CLIP_LENGTH = 4
 MAX_CLIP_LENGTH = 25
+DEFAULT_CLIP_LENGTH = 6
 
-
-def get_random_clip_entry(video: str) -> str:
+def get_random_clip_entry(video: str, clip_length: int) -> str:
     """ Returns file VIDEO, inpoint, outpoint. """
     duration = get_video_duration(video)
-    if duration <= CLIP_LENGTH + PADDING:
+    if duration <= clip_length + PADDING:
         start = 0
     else:
-        start = random.randint(0, int(duration - CLIP_LENGTH-1))
+        start = random.randint(0, int(duration - clip_length-1))
     entry = f"file '{PATH}/{SUBFOLDER}/{video}' \n"
     entry += f"inpoint {start} \n"
-    entry += f"outpoint {start + CLIP_LENGTH} \n"
+    entry += f"outpoint {start + clip_length} \n"
     return entry
 #
 
-def refresh_concat():
+def refresh_concat(clip_length: int):
     """ Build a concat playlist file with random video segments. """
     videos = get_list_of_videos()
-    with open(CONCAT_FILE, 'w') as file:
+    with open(CONCAT_FILE, 'w', encoding='utf-8') as file:
         for num_clip in range(NUM_CLIPS_AHEAD):
             video = random.choice(videos)
-            file.write(get_random_clip_entry(video))
+            file.write(get_random_clip_entry(video, clip_length))
             if num_clip != NUM_CLIPS_AHEAD-1:
                 file.write("\n")
 #
@@ -66,18 +65,17 @@ def get_video_duration(video: str) -> int:
     return seconds
 #
 
-def try_to_accept_user_clip_length() -> None:
-    """ Set global CLIP_LENGTH to what user wants or 1 - MAX. """
-    global CLIP_LENGTH
+def try_to_accept_user_clip_length() -> int:
+    """ Set and return clip_length to what user wants or 1 - MAX. """
+    clip_length = DEFAULT_CLIP_LENGTH
     try:
         user_desire = sys.argv[1]
-        CLIP_LENGTH = int(user_desire)
+        clip_length = int(user_desire)
     except (ValueError, IndexError):
         pass
-    if CLIP_LENGTH < MIN_CLIP_LENGTH:
-        CLIP_LENGTH = MIN_CLIP_LENGTH
-    if CLIP_LENGTH > MAX_CLIP_LENGTH:
-        CLIP_LENGTH = MAX_CLIP_LENGTH
+    clip_length = max(clip_length, MIN_CLIP_LENGTH)
+    clip_length = min(clip_length, MAX_CLIP_LENGTH)
+    return clip_length
 #
 
 def main() -> None:
@@ -87,12 +85,11 @@ def main() -> None:
         + Stream as HSL.
         + Refresh halfway through.
     """
-    try_to_accept_user_clip_length()
+    clip_length = try_to_accept_user_clip_length()
     while True:
-        refresh_concat()
-        sleep(CLIP_LENGTH * (NUM_CLIPS_AHEAD // 2))
+        refresh_concat(clip_length)
+        sleep(clip_length * (NUM_CLIPS_AHEAD // 2))
 #
 
 if __name__ == '__main__':
     main()
-
