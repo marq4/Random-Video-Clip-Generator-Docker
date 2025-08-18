@@ -10,7 +10,7 @@ You will need:
 2. Create a directory under your C drive called 'share' and download a couple of music videos there. For obvious reasons I cannot tell you how to download YouTube videos here. For instructions please contact me: juancmarquina@gmail.com 
 3. Start Docker Desktop. 
 4. %%% GUI %%% Get Docker Image and run it:
-5. Open your web browser (like FireFox or Brave) and go to http://localhost:8000
+5. Open your web browser (like FireFox or Brave) and go to http://localhost:8080
 6. IF you don't see your video clips playing, please contact me.
 7. To make new videos available to the container simply move them into share directory in your host OS (e.g. Windows), no need to restart the container. 
 
