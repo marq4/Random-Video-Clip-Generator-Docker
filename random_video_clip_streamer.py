@@ -1,21 +1,43 @@
-""" Pseudo-live stream of random content from FFmpeg to HTTP. """
+""" Live stream of random content from FFmpeg to HTTP. """
 
 import os
 import random
 import subprocess
 import sys
-import time
+from time import sleep
 
+PATH='/root/RandomVideos'
 SUBFOLDER = 'share'
-NUM_CLIPS = 5
-CLIP_LENGTH = 4
+CONCAT_FILE = 'concat.txt'
+NUM_CLIPS_AHEAD = 10
+CLIP_LENGTH = 6
+PADDING = 5
+MIN_CLIP_LENGTH = 4
+MAX_CLIP_LENGTH = 25
 
 
-def select_video_at_random(list_of_files: list) -> str:
-    """ Choose a video. :return: Video filename with subpath only. """
-    assert list_of_files and SUBFOLDER
-    selected = random.choice(list_of_files)
-    return selected
+def get_random_clip_entry(video: str) -> str:
+    """ Returns file VIDEO, inpoint, outpoint. """
+    duration = get_video_duration(video)
+    if duration <= CLIP_LENGTH + PADDING:
+        start = 0
+    else:
+        start = random.randint(0, int(duration - CLIP_LENGTH-1))
+    entry = f"file '{PATH}/{SUBFOLDER}/{video}' \n"
+    entry += f"inpoint {start} \n"
+    entry += f"outpoint {start + CLIP_LENGTH} \n"
+    return entry
+#
+
+def refresh_concat():
+    """ Build a concat playlist file with random video segments. """
+    videos = get_list_of_videos()
+    with open(CONCAT_FILE, 'w') as file:
+        for num_clip in range(NUM_CLIPS_AHEAD):
+            video = random.choice(videos)
+            file.write(get_random_clip_entry(video))
+            if num_clip != NUM_CLIPS_AHEAD-1:
+                file.write("\n")
 #
 
 def get_list_of_videos() -> list:
@@ -44,32 +66,31 @@ def get_video_duration(video: str) -> int:
     return seconds
 #
 
-def choose_starting_point(video_duration: int) -> int:
-     """ Choose beginning of clip. """
-     assert video_duration > 0
-     return random.randint(0, video_duration - CLIP_LENGTH)
+def try_to_accept_user_clip_length() -> None:
+    """ Set global CLIP_LENGTH to what user wants or 1 - MAX. """
+    global CLIP_LENGTH
+    try:
+        user_desire = sys.argv[1]
+        CLIP_LENGTH = int(user_desire)
+    except (ValueError, IndexError):
+        pass
+    if CLIP_LENGTH < MIN_CLIP_LENGTH:
+        CLIP_LENGTH = MIN_CLIP_LENGTH
+    if CLIP_LENGTH > MAX_CLIP_LENGTH:
+        CLIP_LENGTH = MAX_CLIP_LENGTH
 #
-
 
 def main() -> None:
     """
-    * Randomly select a video from SUBFOLDER and time segment.
-    * Spawn FFmpeg to encode the segment into HLS.
-    * Update the m3u8 playlist and segment files.
-    * Repeat for NUM_CLIPS.
+    * Run forever:
+        + Keep FFmpeg alive.
+        + Stream as HSL.
+        + Refresh halfway through.
     """
-    videos = get_list_of_videos()
-    for _ in range(NUM_CLIPS):
-        video = select_video_at_random(videos)
-        duration = get_video_duration(video)
-        begin_at = choose_starting_point(duration)
-        output_path = "/var/www/html/playlist.m3u8"
-        video = f"{SUBFOLDER}/{video}"
-        subprocess.run(["ffmpeg", "-re", "-ss", str(begin_at), "-i", video,
-            "-t", str(CLIP_LENGTH), "-c:v", "libx264", "-c:a", "aac", 
-            "-f", "hls", "-hls_time", "4", "-hls_list_size", "5",
-            "-hls_flags", "delete_segments", output_path])
-        time.sleep(CLIP_LENGTH)
+    try_to_accept_user_clip_length()
+    while True:
+        refresh_concat()
+        sleep(CLIP_LENGTH * (NUM_CLIPS_AHEAD // 2))
 #
 
 if __name__ == '__main__':
