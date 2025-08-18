@@ -2,6 +2,7 @@
 
 from http.server import HTTPServer, SimpleHTTPRequestHandler
 
+
 class CORSRequestHandler(SimpleHTTPRequestHandler):
     """ Allows requests from any origin """
     def end_headers(self):
